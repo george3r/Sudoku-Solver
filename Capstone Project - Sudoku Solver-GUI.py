@@ -115,6 +115,43 @@ def unique_canidate(nine_box):
           nine_box[n].append(counter+1)
 
 
+def block_RowCol_interaction():
+  pass
+
+
+def naked_subset(nine_box):
+  # If only two numbers are in a cell of a nine box, and another cell in the same nine box also has only those two numbers:
+  # those two numbers must go into those two cells and can be removed from all other cells in the nine box. 
+  for counter,i in enumerate(nine_box):
+    # check to see if any of the cells have a len == 2
+      if len(i) == 2:
+        # if a cell has a len = 2: 
+        # remove it temporarily from the nine box
+        cur_eval = nine_box.pop(counter)
+        # check to see if the removed value matches any other cells in the nine box
+        # THE ORDER OF THE NUMBERS MUST BE THE SAME IN THE LISTS OR IT WILL NOT MATCH!!!
+        for count,j in enumerate(nine_box):
+          # if the original len == 2 cell matches any other cells in the nine box:
+          if j == cur_eval:
+            # remove any matches temporarily from the nine box
+            match_eval = nine_box.pop(count)
+            # remove values in the popped lists from the other lists in the nine box
+            # for k in the nine box (minus the two removed cells):
+            for k in nine_box:
+              # for each number in the list of k:
+              for l in k:
+                # if the number in list k == one of the two numbers in the matching cells with a length of two:
+                # remove that number
+                if match_eval[0] == l:
+                  k.remove(match_eval[0])
+                if match_eval[1] == l:
+                  k.remove(match_eval[1])
+            # add the second mathed value back into the list in the correct order
+            nine_box.insert(count,match_eval)
+        # add the original len == 2 value back into the list in the correct order
+        nine_box.insert(counter,cur_eval)
+
+
 def starting_position():
   # define a blank unsolved sudoku problem, then take in input from the GUI 
   global dict_ln 
@@ -164,7 +201,7 @@ def solve():
 
     # calculate possible solutions before solving for comparison to possible solutions after solving
     previous_poss = changes()
-    print(previous_poss)
+    print(f'Possible solutions for previous itteration: {previous_poss} ')
     
     # SOLVE SOLE_CANIDATE FOR ROW, COL, AND BOX
     for c,i in enumerate(range(9)):
@@ -177,7 +214,7 @@ def solve():
       current_9_box = eval('box'+str(c+1))
       sole_canidate(current_9_box)
     
-    # SOLVE THE UNIQUE_CANIDATE FOR ROW, COL, AND BOX
+    # SOLVE THE UNIQUE_CANIDATE FOR ROW, COL, AND BOX (ruc = rows-unique-canidate)
     for c,i in enumerate(range(9)):
       current_9_box_ruc = eval('row'+str(c+1))
       unique_canidate(current_9_box_ruc)
@@ -188,9 +225,20 @@ def solve():
       current_9_box_buc = eval('box'+str(c+1))
       unique_canidate(current_9_box_buc) 
 
+    # SOLVE NAKED_SUBSET FOR ROW, COL, AND BOX (rns = rows-naked-subset)
+    for c,i in enumerate(range(9)):
+      current_9_box_rns = eval('row'+str(c+1))
+      naked_subset(current_9_box_rns)
+    for c,i in enumerate(range(9)):
+      current_9_box_cns = eval('col'+str(c+1))
+      naked_subset(current_9_box_cns)
+    for c,i in enumerate(range(9)):
+      current_9_box_bns = eval('box'+str(c+1))
+      naked_subset(current_9_box_bns) 
+
     # calculate possible solutions after solving for comparison to possible solutions before solving
     current_poss = changes()
-    print(current_poss)
+    print(f'Possible solutions for current itteration: {current_poss} ')
     # if the number of solutions is the same, then continued solving will yield nothing, and itteration should stop
     if current_poss == previous_poss:
       cont_solving = False
