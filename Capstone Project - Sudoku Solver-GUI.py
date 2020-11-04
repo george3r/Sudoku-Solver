@@ -114,7 +114,11 @@ def unique_canidate(nine_box):
             nine_box[n].pop()
           nine_box[n].append(counter+1)
 
-        
+
+def block_RowCol_interaction():
+  pass
+
+
 def naked_subset(nine_box):
   # If only two numbers are in a cell of a nine box, and another cell in the same nine box also has only those two numbers:
   # those two numbers must go into those two cells and can be removed from all other cells in the nine box. 
@@ -145,9 +149,9 @@ def naked_subset(nine_box):
             # add the second mathed value back into the list in the correct order
             nine_box.insert(count,match_eval)
         # add the original len == 2 value back into the list in the correct order
-        nine_box.insert(counter,cur_eval)        
+        nine_box.insert(counter,cur_eval)
 
-        
+
 def starting_position():
   # define a blank unsolved sudoku problem, then take in input from the GUI 
   global dict_ln 
@@ -197,7 +201,7 @@ def solve():
 
     # calculate possible solutions before solving for comparison to possible solutions after solving
     previous_poss = changes()
-    print(previous_poss)
+    print(f'Possible solutions for previous itteration: {previous_poss} ')
     
     # SOLVE SOLE_CANIDATE FOR ROW, COL, AND BOX
     for c,i in enumerate(range(9)):
@@ -230,11 +234,11 @@ def solve():
       naked_subset(current_9_box_cns)
     for c,i in enumerate(range(9)):
       current_9_box_bns = eval('box'+str(c+1))
-      naked_subset(current_9_box_bns)         
-        
+      naked_subset(current_9_box_bns) 
+
     # calculate possible solutions after solving for comparison to possible solutions before solving
     current_poss = changes()
-    print(current_poss)
+    print(f'Possible solutions for current itteration: {current_poss} ')
     # if the number of solutions is the same, then continued solving will yield nothing, and itteration should stop
     if current_poss == previous_poss:
       cont_solving = False
